@@ -15,15 +15,26 @@ logger = logging.getLogger(__name__)
 
 
 # Create your views here.
-
+def my_home_view(request):
+    return render(request, 'djangoapp/home.html')
 
 # Create an `about` view to render a static about page
-# def about(request):
-# ...
+def about(request):
+    return render(request, 'djangoapp/about.html')
 
 
 # Create a `contact` view to return a static contact page
-#def contact(request):
+def contact(request):
+    context = {}
+    company_address = "2150 Ogden Ave,Downers Grove,IL 60515"
+    telephone_number = "+1234567890"
+
+    context = {
+        'company_address': company_address,
+        'telephone_number': telephone_number,
+    }
+
+    return render(request, 'djangoapp/contact.html', context)
 
 # Create a `login_request` view to handle sign in request
 # def login_request(request):
