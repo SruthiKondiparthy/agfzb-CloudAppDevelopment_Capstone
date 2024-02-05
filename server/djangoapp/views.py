@@ -33,7 +33,7 @@ def registration_request(request):
             user = User.objects.create_user(username=username, first_name=first_name, last_name=last_name,
                                             password=password)
             login(request, user)
-            return redirect("djangoapp/index.html")
+            return redirect("djangoapp:index")
         else:
             context['message'] = "User already exists."
             return render(request, 'djangoapp/user_registration.html', context)
@@ -49,17 +49,17 @@ def login_request(request):
         if user is not None:
             login(request, user)
             print("logged in ....")
-            return redirect('djangoapp/index.html')
+            return redirect('djangoapp:index')
         else:
             context['message'] = "Invalid username or password."
-            return render(request, 'djangoapp/user_login.html', context)
+            return render(request, 'djangoapp/index.html', context)
     else:
         return render(request, 'djangoapp/user_login.html', context)
 
 
 def logout_request(request):
     logout(request)
-    return redirect('djangoapp/index.html')
+    return redirect('djangoapp:index')
     
 # Create your views here.
 def my_home_view(request):
