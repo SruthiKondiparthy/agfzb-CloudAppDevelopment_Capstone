@@ -124,6 +124,7 @@ def get_dealer_details(request, dealer_id):
 # Create a `add_review` view to submit a review
 @login_required
 def add_review(request, dealer_id):
+    request.method = 'POST'  
     if request.method == 'POST':
         # Check if the user is authenticated
         if not request.user.is_authenticated:
@@ -142,10 +143,10 @@ def add_review(request, dealer_id):
         json_payload["review"] = review
 
         # Assuming you have the URL for posting reviews
-        post_reviews_url = "URL_TO_POST_REVIEWS_ENDPOINT"
+        post_reviews_url = "https://sruthiravuru-8000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/djangoapp/review/"
         
         # Make a POST request to add the review
-        post_response = post_request(post_reviews_url, json_payload, dealerId=dealer_id)
+        post_response = post_request(post_reviews_url, json_payload, dealer_id=dealer_id)
 
         if post_response.status_code == 201:
             return HttpResponse("Review added successfully", status=201)

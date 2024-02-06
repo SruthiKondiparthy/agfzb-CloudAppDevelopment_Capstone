@@ -15,7 +15,7 @@ def get_request(url, **kwargs):
     try:        
         if api_key:
             print("I am in API_KEY")                         
-            response = requests.get(url, params=params, headers={'Content-Type': 'application/json'},
+            response = requests.get(url, params=kwargs, headers={'Content-Type': 'application/json'},
                                     auth=HTTPBasicAuth('apikey', api_key))
         else:
             print("I am in no API_KEY")
@@ -28,11 +28,15 @@ def get_request(url, **kwargs):
     status_code = response.status_code
     print("With status {} ".format(status_code))
     json_data = json.loads(response.text)
+    print(json_data)
     return json_data
 
 # Create a `post_request` to make HTTP POST requests
 # e.g., response = requests.post(url, params=kwargs, json=payload)
-
+def post_request(url, json_payload, **kwargs):
+    print("kwargs from post_request : ", kwargs)
+    response = requests.post(url, json=json_payload, params=kwargs)
+    return response
 
 # Create a get_dealers_from_cf method to get dealers from a cloud function
 # def get_dealers_from_cf(url, **kwargs):
@@ -87,13 +91,16 @@ def get_dealers_by_id(url, dealerId):
 # - Parse JSON results into a DealerView object list
 def get_dealer_reviews_from_cf(url, dealer_id):
     reviews_data = get_request(url, id=dealer_id)
-    
+    print("Review_data :",reviews_data)
     if reviews_data is None:
         return None
     
     # Convert the JSON result into a list of DealerReview objects
     results = []
+    print("Creating DealerReview")
     for review_data in reviews_data:
+        print("In for loop")
+        print("review_data name : ", review_data)
         result = DealerReview(
             dealership=review_data.get('dealership'),
             name=review_data.get('name'),
@@ -107,9 +114,10 @@ def get_dealer_reviews_from_cf(url, dealer_id):
             id=review_data.get('id')
         )
         result.sentiment = analyze_review_sentiments(result.review)
+        print("Result appended: , data_added: ", result.name, review_data.get('name'))
         results.append(result)
-    
-    return result
+    print("Results - DealerReview Class", results)
+    return results
 
 
 # Create an `analyze_review_sentiments` method to call Watson NLU and analyze text
@@ -125,7 +133,5 @@ def analyze_review_sentiments(text):
     #                                auth=HTTPBasicAuth('apikey', api_key))
     return text
 
-def post_request(url, json_payload, **kwargs):
-    response = requests.post(url, json=json_payload, **kwargs)
-    return response
+
 
