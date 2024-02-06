@@ -135,7 +135,7 @@ def add_review(request, dealer_id):
         review["time"] = datetime.utcnow().isoformat()
         review["name"] = request.user.username  # Assuming user name is the authenticated user's username
         review["dealership"] = dealer_id
-        review["review"] = request.POST.get('review_text', '')
+        review["review"] = "This is great deal"
         #review["purchase"] = request.POST.get('purchase', '')
 
         # Create a JSON payload with the review
@@ -143,13 +143,13 @@ def add_review(request, dealer_id):
         json_payload["review"] = review
 
         # Assuming you have the URL for posting reviews
-        post_reviews_url = "https://sruthiravuru-8000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/djangoapp/review/"
+        post_reviews_url = "https://sruthiravuru-8000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/djangoapp/review/1/"
         
         # Make a POST request to add the review
-        post_response = post_request(post_reviews_url, json_payload, dealer_id=dealer_id)
-
-        if post_response.status_code == 201:
-            return HttpResponse("Review added successfully", status=201)
+        post_response = post_request(post_reviews_url, json_payload)
+        
+        if post_response.status_code == 201:     
+            return HttpResponse("Review added successfully: ",  status=201)
         else:
             return HttpResponse(f"Failed to add review: {post_response.text}", status=500)
     else:
