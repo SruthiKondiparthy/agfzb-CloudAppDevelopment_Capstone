@@ -2,8 +2,9 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
+from django.contrib.auth.decorators import login_required
 # from .models import related models
-from .restapis import get_dealers_from_cf, get_dealers_by_id,get_dealer_reviews_from_cf
+from .restapis import get_dealers_from_cf, get_dealers_by_id,get_dealer_reviews_from_cf, post_request
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
@@ -86,10 +87,10 @@ def contact(request):
 # Update the `get_dealerships` view to render the index page with a list of dealerships
 def get_dealerships(request):
     if request.method == "GET":
-        url = "https://sruthiravuru-3000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/dealerships/get"
-        #url = ""
-        #if not url:
-        #    return render(request, 'djangoapp/index.html')
+        #url = "https://sruthiravuru-3000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/dealerships/get"
+        url = ""
+        if not url:
+            return render(request, 'djangoapp/index.html')
 
         # Get dealers from the URL
         dealerships = get_dealers_from_cf(url)
@@ -121,6 +122,35 @@ def get_dealer_details(request, dealer_id):
 
 
 # Create a `add_review` view to submit a review
-# def add_review(request, dealer_id):
-# ...
+@login_required
+def add_review(request, dealer_id):
+    if request.method == 'POST':
+        # Check if the user is authenticated
+        if not request.user.is_authenticated:
+            return HttpResponse("Unauthorized", status=401)
+        
+        # Create a dictionary object called review
+        review = {}
+        review["time"] = datetime.utcnow().isoformat()
+        review["name"] = request.user.username  # Assuming user name is the authenticated user's username
+        review["dealership"] = dealer_id
+        review["review"] = request.POST.get('review_text', '')
+        #review["purchase"] = request.POST.get('purchase', '')
+
+        # Create a JSON payload with the review
+        json_payload = {}
+        json_payload["review"] = review
+
+        # Assuming you have the URL for posting reviews
+        post_reviews_url = "URL_TO_POST_REVIEWS_ENDPOINT"
+        
+        # Make a POST request to add the review
+        post_response = post_request(post_reviews_url, json_payload, dealerId=dealer_id)
+
+        if post_response.status_code == 201:
+            return HttpResponse("Review added successfully", status=201)
+        else:
+            return HttpResponse(f"Failed to add review: {post_response.text}", status=500)
+    else:
+        return HttpResponse("Method not allowed", status=405)
 

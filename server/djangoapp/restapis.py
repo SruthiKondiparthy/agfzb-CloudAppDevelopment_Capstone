@@ -11,16 +11,20 @@ from requests.auth import HTTPBasicAuth
 def get_request(url, **kwargs):
     print(kwargs)
     print("GET from {} ".format(url))
+    api_key=""
     try:        
-        if api_key:                         
+        if api_key:
+            print("I am in API_KEY")                         
             response = requests.get(url, params=params, headers={'Content-Type': 'application/json'},
                                     auth=HTTPBasicAuth('apikey', api_key))
         else:
+            print("I am in no API_KEY")
             response = requests.get(url, headers={'Content-Type': 'application/json'},
-                                            params=kwargs)
+                                    params=kwargs)
     except:
         # If any error occurs
         print("Network exception occurred")
+        return {}
     status_code = response.status_code
     print("With status {} ".format(status_code))
     json_data = json.loads(response.text)
@@ -112,14 +116,16 @@ def get_dealer_reviews_from_cf(url, dealer_id):
 #- Call get_request() with specified arguments
 # - Get the returned sentiment label such as Positive or Negative
 def analyze_review_sentiments(text):
-    params = dict()
-    params["text"] = kwargs["text"]
-    params["version"] = kwargs["version"]
-    params["features"] = kwargs["features"]
-    params["return_analyzed_text"] = kwargs["return_analyzed_text"]
-    response = requests.get(url, params=params, headers={'Content-Type': 'application/json'},
-                                    auth=HTTPBasicAuth('apikey', api_key))
-    return params["return_analyzed_text"]
+    #params = dict()
+    #params["text"] = kwargs["text"]
+    #params["version"] = kwargs["version"]
+    #params["features"] = kwargs["features"]
+    #params["return_analyzed_text"] = kwargs["return_analyzed_text"]
+    #response = requests.get(url, params=params, headers={'Content-Type': 'application/json'},
+    #                                auth=HTTPBasicAuth('apikey', api_key))
+    return text
 
-
+def post_request(url, json_payload, **kwargs):
+    response = requests.post(url, json=json_payload, **kwargs)
+    return response
 
