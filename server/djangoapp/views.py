@@ -86,19 +86,20 @@ def contact(request):
 
 # Update the `get_dealerships` view to render the index page with a list of dealerships
 def get_dealerships(request):
+    context = {}    
     if request.method == "GET":
-        #url = "https://sruthiravuru-3000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/dealerships/get"
-        url = ""
+        url = "https://sruthiravuru-3000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/dealerships/get"
         if not url:
             return render(request, 'djangoapp/index.html')
 
         # Get dealers from the URL
         dealerships = get_dealers_from_cf(url)
-        #dealerships = get_dealers_by_id(url, )        
-        # Concat all dealer's short name
-        dealer_names = ' '.join([dealer.short_name for dealer in dealerships])
-        # Return a list of dealer short name
-        return HttpResponse(dealer_names)
+        print(dealerships)
+        # Add the dealerships list to the context
+        context['dealership_list'] = dealerships
+        
+        # Return an HTTP response rendering the 'djangoapp/index.html' template with the context
+        return render(request, 'djangoapp/index.html', context)
 
 # Create a `get_dealer_details` view to render the reviews of a dealer
 def get_dealer_details(request, dealer_id):
@@ -116,42 +117,29 @@ def get_dealer_details(request, dealer_id):
         'dealer_id': dealer_id,
         'dealer_reviews': dealer_reviews
     }
-    
-    # Return a HttpResponse with the context
-    return HttpResponse(context)
+    return render(request, 'djangoapp/dealer_details.html', context)  
 
 
 # Create a `add_review` view to submit a review
 @login_required
 def add_review(request, dealer_id):
-    request.method = 'POST'  
     if request.method == 'POST':
         # Check if the user is authenticated
         if not request.user.is_authenticated:
             return HttpResponse("Unauthorized", status=401)
         
-        # Create a dictionary object called review
-        review = {}
-        review["time"] = datetime.utcnow().isoformat()
-        review["name"] = request.user.username  # Assuming user name is the authenticated user's username
-        review["dealership"] = dealer_id
-        review["review"] = "This is great deal"
-        #review["purchase"] = request.POST.get('purchase', '')
-
-        # Create a JSON payload with the review
-        json_payload = {}
-        json_payload["review"] = review
-
-        # Assuming you have the URL for posting reviews
-        post_reviews_url = "https://sruthiravuru-8000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/djangoapp/review/1/"
+        review_content = request.POST.get('review_content')
+        purchase_check = request.POST.get('purchase_check')
         
-        # Make a POST request to add the review
-        post_response = post_request(post_reviews_url, json_payload)
-        
-        if post_response.status_code == 201:     
-            return HttpResponse("Review added successfully: ",  status=201)
-        else:
-            return HttpResponse(f"Failed to add review: {post_response.text}", status=500)
+        # Store review data in session
+        request.session['review_data'] = {
+            'content': review_content,
+            'purchased': purchase_check,
+            'dealer_id': dealer_id
+        }
+        return redirect('djangoapp:dealer_details', dealer_id=dealer_id)
     else:
-        return HttpResponse("Method not allowed", status=405)
+        # Handle GET request to show the form
+        # Render the form template
+        return render(request, 'djangoapp/add_review.html', {'dealer_id': dealer_id})
 

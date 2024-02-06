@@ -16,6 +16,9 @@
                 <ul class="nav navbar-nav navbar-right">
                     {% if user.is_authenticated %}
                     <li>
+                        <!--a class="btn btn-link" href="{% url 'djangoapp:add_review' dealer_id=dealer.id %}">Add Review</a-->
+                    </li>
+                    <li>
                         <a class="btn btn-link" href="#">{{ user.first_name }}({{ user.username }})</a>
                         <a class="btn btn-link" href="{% url 'djangoapp:logout' %}">Logout</a>
                     </li>
@@ -36,7 +39,21 @@
             </div>
         </nav>
 
-       {{}}
+        <div class="container mt-4">
+            <div class="card-columns">
+                {% for review in reviews %}
+                <div class="card">
+                    <img class="card-img-top" src="{% if review.sentiment == 'positive' %}{{ MEDIA_URL }}/emoji/positive.png{% elif review.sentiment == 'neutral' %}{{ MEDIA_URL }}/emoji/neutral.png{% else %}{{ MEDIA_URL }}/emoji/negative.png{% endif %}" alt="Sentiment Emoji">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ review.car_model }}</h5>
+                        <p class="card-text">Make: {{ review.car_make }}</p>
+                        <p class="card-text">Purchase Year: {{ review.car_year }}</p>
+                        <p class="card-text">{{ review.review }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
 
     </body>
 

@@ -33,6 +33,46 @@
             </ul>
         </div>
     </nav>
-    
+    <div class="container mt-4">
+        <h2>Add Review</h2>
+        <form method="post" action="{% url 'djangoapp:add_review' dealer_id %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="content">Review Content:</label>
+                <textarea class="form-control" id="content" name="content" rows="2" required></textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-check-label" for="purchasecheck">
+                    Have you purchased a car from this dealer before?
+                </label>
+                <input class="form-check-input" type="checkbox" name="purchasecheck" id="purchasecheck">
+            </div>
+            <div class="form-group">
+                <label for="car">Select Car:</label>
+                <select name="car" id="car" class="form-select" required>
+                    {% for car in cars %}
+                        <option value="{{ car.id }}">{{ car.name }} - {{ car.make.name }} - {{ car.year|date:"Y" }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="purchasedate">Purchase Date:</label>
+                <input class="date-own form-control" type="text" name="purchasedate" id="purchasedate">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+
+    <!-- Include jQuery and Bootstrap JS files -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <!-- Include datepicker script -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <script type="text/javascript">
+        $('.date-own').datepicker({
+            format: 'mm/dd/yyyy'
+        });
+    </script>
     </body>
 </html>
