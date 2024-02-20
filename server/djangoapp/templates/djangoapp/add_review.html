@@ -21,14 +21,14 @@
                     <a class="btn btn-link" href="#">{{ user.first_name }}({{ user.username }})</a>
                     <a class="btn btn-link" href="{% url 'djangoapp:logout' %}">Logout</a>                    
                 </li>
-                <form class="form-inline" action="{% url 'djangoapp:add_review' %}" method="post">
+                <!--form class="form-inline" action="{% url 'djangoapp:add_review' dealer_id %}" method="post">
                     {% csrf_token %}
                     <div class="input-group">
                         <label for="review"><b>Review </b></label>
                         <input id="review" class="form-control" type="text" placeholder="Enter Review: " name="review" required>
                     </div>
                     <button class="btn btn-primary" type="submit">submit</button>
-                </form>                
+                </form-->                
                 {% endif %}
             </ul>
         </div>

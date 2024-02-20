@@ -58,7 +58,7 @@ def get_dealers_from_cf(url, **kwargs):
         for dealer in dealers:
             # Get its content in `doc` object
             dealer_doc = dealer
-            print("DEaler",dealer_doc)
+            print("Dealer: ",dealer_doc)
             # Create a CarDealer object with values in `doc` object
             dealer_obj = CarDealer(address=dealer_doc["address"], city=dealer_doc["city"], full_name=dealer_doc["full_name"],
                                    id=dealer_doc["id"], lat=dealer_doc["lat"], long=dealer_doc["long"],
@@ -94,7 +94,7 @@ def get_dealers_by_id(url, dealerId):
 # - Call get_request() with specified arguments
 # - Parse JSON results into a DealerView object list
 def get_dealer_reviews_from_cf(url, dealer_id):
-    reviews_data = get_request(url, id=dealer_id)
+    reviews_data = get_request(url, dealer_id=dealer_id)
     print("Review_data :",reviews_data)
     if reviews_data is None:
         return None
