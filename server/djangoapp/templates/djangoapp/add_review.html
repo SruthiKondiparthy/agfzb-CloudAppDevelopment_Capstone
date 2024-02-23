@@ -20,15 +20,7 @@
                 <li>
                     <a class="btn btn-link" href="#">{{ user.first_name }}({{ user.username }})</a>
                     <a class="btn btn-link" href="{% url 'djangoapp:logout' %}">Logout</a>                    
-                </li>
-                <!--form class="form-inline" action="{% url 'djangoapp:add_review' dealer_id %}" method="post">
-                    {% csrf_token %}
-                    <div class="input-group">
-                        <label for="review"><b>Review </b></label>
-                        <input id="review" class="form-control" type="text" placeholder="Enter Review: " name="review" required>
-                    </div>
-                    <button class="btn btn-primary" type="submit">submit</button>
-                </form-->                
+                </li>                               
                 {% endif %}
             </ul>
         </div>
@@ -41,17 +33,32 @@
                 <label for="content">Review Content:</label>
                 <textarea class="form-control" id="content" name="content" rows="2" required></textarea>
             </div>
-            <div class="form-group">
-                <label class="form-check-label" for="purchasecheck">
-                    Have you purchased a car from this dealer before?
-                </label>
+            <div class = "form-check mt-5">
                 <input class="form-check-input" type="checkbox" name="purchasecheck" id="purchasecheck">
+                <label class="form-check-label">Has purchased car from {{dealer.full_name}} ?<label> <span style="color: gray; font-weight: 300; padding-left: 5px;">(select purchased car information below if checked)</span>
             </div>
-            <div class="form-group">
-                <label for="car">Select Car:</label>
+            <div class="d-flex mt-3">
+                <div class="mr-5">
+                    <h5>Select your car (model-make-year):</h5><br/>
+                    <select name="car" id="car" class="form-select"><br>
+                        {% for car in cars %}
+                        <option selected value={{car.dealer_id}}>{{car.car_make.name}} {{car.name}} {{ car.year }}</option>
+                    {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <h5>Select Your Purchase Date:</h5><br/>
+                    <div class = "input-group date" data-provide="datepicker-inline"> 
+                        <input class="date-own form-control" type="date" name="purchasedate" id="purchasedate"><br>
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-primary mt-5" type="submit">Add review</button>            
+            <!--div class="form-group">
+                <label for="car">Select Car:   </label>
                 <select name="car" id="car" class="form-select" required>
                     {% for car in cars %}
-                        <option value="{{ car.id }}">{{ car.name }} - {{ car.make.name }} - {{ car.year|date:"Y" }}</option>
+                        <option value="{{ car.dealer_id }}"> {{ car.name }} - {{ car.car_make.name }} - {{ car.year|date:"Y" }} </option>
                     {% endfor %}
                 </select>
             </div>
@@ -59,20 +66,14 @@
                 <label for="purchasedate">Purchase Date:</label>
                 <input class="date-own form-control" type="text" name="purchasedate" id="purchasedate">
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary">Submit</button-->
         </form>
-    </div>
-
-    <!-- Include jQuery and Bootstrap JS files -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <!-- Include datepicker script -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    </div> 
+    
+    </body>
     <script type="text/javascript">
         $('.date-own').datepicker({
             format: 'mm/dd/yyyy'
         });
     </script>
-    </body>
 </html>
