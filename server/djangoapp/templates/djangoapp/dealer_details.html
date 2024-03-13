@@ -12,12 +12,12 @@
             <div class="container-fluid">
                 <div class="navbar-header">
                     <a class="navbar-brand" href="{% url 'djangoapp:index' %}">Dealership Review of </a>
-                    {{dealer_id}}
+                    {{dealer.short_name}}
                 </div>
                 <ul class="nav navbar-nav navbar-right">
                     {% if user.is_authenticated %}
                     <li>
-                        <a class="btn btn-link" href="{% url 'djangoapp:add_review' dealer_id %}">Add Review</a>
+                        <a class="btn btn-link" href="{% url 'djangoapp:add_review' dealer.id %}">Add Review</a>
                     </li>
                     <li>
                         <a class="btn btn-link" href="#">{{ user.first_name }}({{ user.username }})</a>
