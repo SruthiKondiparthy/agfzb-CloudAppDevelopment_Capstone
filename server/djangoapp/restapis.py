@@ -31,11 +31,8 @@ def get_request(url, **kwargs):
 # Create a `post_request` to make HTTP POST requests
 
 def post_request(url, json_payload, **kwargs):
-    print("Data to be posted : ", json_payload)
-    print("Post URL: {} " .format(url))    
-    response = requests.post(url, params=kwargs, json=json_payload)
-    status_code = response.status_code
-    print("With status {} ".format(status_code))        
+    url = "https://sruthiravuru-5000.theianext-1-labs-prod-misc-tools-us-east-0.proxy.cognitiveclass.ai/api/post_review"   
+    response = requests.post(url, params=kwargs, json=json_payload)       
     return response
 
 # Create a get_dealers_from_cf method to get dealers from a cloud function
